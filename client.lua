@@ -8,91 +8,96 @@ spawnbilvar = false
 player = GetPlayerPed(-1) 
 biltargetvar = false
 
-ESX = exports["es_extended"]:getSharedObject()
+vRP = Proxy.getInterface("vRP")
+vRPclient = Tunnel.getInterface("vRP","Vrp-postbud")
 
----------
--- thread
----------
+HT = nil
 
 Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(1000)
-        
-        --------------
-        -- spawner ped
-        --------------
-
-        if DoesEntityExist(person) == false then
-            RequestModel(Config.person)
-            while not HasModelLoaded(Config.person) do
-                Citizen.Wait(100)
-            end
-
-            person = CreatePed(1, GetHashKey(Config.person), Config.pedCoords, true, true)
-            FreezeEntityPosition(person, true)
-            SetEntityInvincible(person, true)
-            SetBlockingOfNonTemporaryEvents(person, true)
-            TaskStandStill(person, 100000000000000000000000000000)
-
-            local pedNetId = NetworkGetNetworkIdFromEntity(person)
-            exports.ox_target:addEntity(pedNetId, Config.pedoptions)
-        end
-
-        -----------
-        -- postmenu
-        -----------
-
-        lib.registerContext({
-          id = 'post:menu',
-          title = 'Post Menu📦',
-          options = {
-            {
-              title = 'Oversigt',
-            },
-            {
-              title = 'Spawn køretøj',
-              description = 'her kan du spawne dit køretøj',
-              icon = 'car',
-              event = 'postbil',
-              disabled = spawnbilvar
-            },
-            {
-              title = 'parker køretøj',
-              description = 'her kan du parkere dit køretøj',
-              icon = 'car',
-              event = 'postbilparker',
-              disabled = parkerbilvar,
-            },
-            {
-              title = 'Påbegynd opgave',
-              description = 'Gå igang med en opgave',
-              icon = 'envelope',
-              event = 'startopgave',
-              disabled = paabegyndvar
-            },
-            {
-              title = 'Annuler Opgave',
-              description = 'Stop din igangværende opgave',
-              icon = 'xmark',
-              event = 'stopopgave',
-              disabled = annulervar
-            },
-          }
-        })
-        
-        RegisterCommand("postmenu", function()
-          if ESX.PlayerData.job.name == 'postmand' then
-            lib.showContext('post:menu')
-          else
-            lib.notify({
-              title = 'fejl',
-              description = 'Du er ikke postmand',
-              type = 'error'
-            })
-          end
-        end)
+    while HT == nil do
+        TriggerEvent('HT_base:getBaseObjects', function(obj) HT = obj end)
+        Citizen.Wait(0)
     end
 end)
+
+
+if DoesEntityExist(person) == false then
+  RequestModel(Config.person)
+  while not HasModelLoaded(Config.person) do
+      Citizen.Wait(100)
+  end
+
+  person = CreatePed(1, GetHashKey(Config.person), Config.pedCoords, true, true)
+  FreezeEntityPosition(person, true)
+  SetEntityInvincible(person, true)
+  SetBlockingOfNonTemporaryEvents(person, true)
+  FreezeEntityPosition(
+    person --[[ Entity ]], 
+    true --[[ boolean ]]
+  )
+  local pedNetId = NetworkGetNetworkIdFromEntity(person)
+  exports.ox_target:addEntity(pedNetId, Config.pedoptions)
+end
+
+
+
+
+RegisterCommand("postmenu", function()
+  HT.TriggerServerCallback('Postbud:hasgruop', function(result)
+    if result then
+      postmenu()
+    else 
+      lib.notify({
+        title = 'fejl',
+        description = 'Du er ikke postmand',
+        type = 'error'
+      })
+    end
+end, Config.gruop)    
+end)
+
+-- Ox Menu -- 
+
+function postmenu()
+  lib.registerContext({
+    id = 'post:menu',
+    title = 'Post Menu📦',
+    options = {
+      {
+        title = 'Oversigt',
+      },
+      {
+        title = 'Spawn køretøj',
+        description = 'her kan du spawne dit køretøj',
+        icon = 'car',
+        event = 'postbil',
+        disabled = spawnbilvar
+      },
+      {
+        title = 'parker køretøj',
+        description = 'her kan du parkere dit køretøj',
+        icon = 'car',
+        event = 'postbilparker',
+        disabled = parkerbilvar,
+      },
+      {
+        title = 'Påbegynd opgave',
+        description = 'Gå igang med en opgave',
+        icon = 'envelope',
+        event = 'startopgave',
+        disabled = paabegyndvar
+      },
+      {
+        title = 'Annuler Opgave',
+        description = 'Stop din igangværende opgave',
+        icon = 'xmark',
+        event = 'stopopgave',
+        disabled = annulervar
+      },
+    }
+  })
+  lib.showContext('post:menu')
+end
 
 --------------
 -- info center
