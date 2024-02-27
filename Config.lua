@@ -4,6 +4,8 @@ Config.betaling = 1000 -- hvor meget man bliver betalt for at udføre en opgave
 
 Config.bilspawn = vector4(60.3270, 124.2754, 79.1249, 160.9626) -- lokationen bilen skal spawne
 
+Config.maxDistanceToRemoveCar = 10
+
 Config.bilnavn = "boxville2" -- navnet på postbilen
 
 Config.bilspawndistance = 20 -- hvor tæt man skal være for bilen for at den kan spawne
@@ -41,7 +43,7 @@ Config.coords = {
 }
 
 Config.pedoptions = {
-    label = "åben post info centeret", -- det der står på target ved postmanden / lablet
+    label = "Åben post info centeret.", -- det der står på target ved postmanden / lablet
     icon = "fas fa-user", -- iconet ved siden lablet
     distance = 3, -- hvor tæt man skal være på for at kunne se targetet på postmanden
     onSelect = function(data)
@@ -50,7 +52,7 @@ Config.pedoptions = {
 }
 
 Config.modtageroptions = {
-    label = "Aflever pakke", -- lablet der står på manden man aflevere pakken hos
+    label = "Aflever pakke.", -- lablet der står på manden man aflevere pakken hos
     icon = "box", -- iconet ved siden af lablet
     distance = 2, -- hvor tæt man skal være på for at kunne se targetet på postmanden
     onSelect = function(data)
