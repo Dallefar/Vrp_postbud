@@ -1,22 +1,23 @@
-**ESX POSTBUD**
+**VRP POSTBUD**
+
+**Afhængighed:**
+Du skal have HT-base, som kan downloades her: [HT-Base GitHub](https://github.com/Just-Taco/HT-Base)
 
 **Beskrivelse:**
-et simplet men dejligt postbuds job til esx som postmand kan man lave postmissioner og tjene penge på den måde
+Et simpelt, men funktionelt postbudsjob til VRP. Som postmand kan du udføre postmissioner og tjene penge på den måde.
 
-**features:**
-Info center - ved manden på posthuset kan postbudde læse om jobbet og om hvordan man starter opgaver
+**Funktioner:**
+- Info Center: Ved manden på posthuset kan postbud læse om jobbet og hvordan man starter opgaver.
+- Postmissioner: Som postbud kan du starte postmissioner, hvor du kører ud til en NPC i din postbil og leverer en pakke.
+- Postmenu: I postmenuen kan du udføre alle nødvendige opgaver som postmand, herunder at spawn/parkere dit køretøj og starte/stoppe missioner.
 
-post missioner - som postbud kan du starte post missioner på de her missioner skal du køre ud til en npc i din post bil og levere en pakke
+**Konfiguration:**
+I konfigurationen kan du ændre alt fra lokationer til cooldown mellem missioner og meget mere.
 
-post menu - i post menuen kan du gøre alt det nødvendige som postmand som fx at spawne/parkere dit køretøj og starte/stoppe missioner
+**Bemærk:** Dette script er færdigt, men der kan komme opdateringer og reworks i fremtiden, da nogle af løsningerne måske ikke er helt optimale.
 
-**Config:**
-i configen kan du ændre alt fra lokationer til cooldown mellem missioner og meget mere
+**Showcase:**
+[Se Showcase](https://streamable.com/jlskgj)
 
-**OPS dette script er færdigt men når jeg engang for lyst kommer der nok et rework med nogle opdateringer o.s.v da nogle af løsningerne ikke er helt optimale**
-
-**showcase:**
-https://streamable.com/jlskgj
-
-support på min discord:
-https://discord.gg/ZBUjEppzGz
+Support på min Discord (Sigges):
+[Discord-link](https://discord.gg/ZBUjEppzGz)

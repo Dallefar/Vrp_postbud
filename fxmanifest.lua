@@ -6,15 +6,20 @@ author 'Sigge x Dallefar'
 description 'Postbud script af Sigge oversæt til vrp af dallefar.'
 version '1.2.0'
 
+dependency "vrp"
+
 shared_scripts {
   '@ox_lib/init.lua',
   "Config.lua",
 }
 
-server_scripts {
-  "server.lua",
+client_scripts{ 
+  "lib/Proxy.lua",
+  "lib/Tunnel.lua",
+  "client.lua"
 }
 
-client_scripts {
-  "client.lua",
+server_scripts{ 
+  "@vrp/lib/utils.lua",
+  "server.lua"
 }

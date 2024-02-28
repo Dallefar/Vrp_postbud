@@ -1,10 +1,12 @@
 Config = {}
 
-Config.betaling = 1000 -- hvor meget man bliver betalt for at udføre en opgave
+Config.betaling = {1000,12000} -- hvor meget man bliver betalt for at udføre en opgave
 
 Config.bilspawn = vector4(60.3270, 124.2754, 79.1249, 160.9626) -- lokationen bilen skal spawne
 
 Config.maxDistanceToRemoveCar = 10
+
+Config.perm = "postbud.duty"
 
 Config.bilnavn = "boxville2" -- navnet på postbilen
 
@@ -51,17 +53,13 @@ Config.pedoptions = {
     end
 }
 
+
+--local pakketaget = true
+
 Config.modtageroptions = {
     label = "Aflever pakke.", -- lablet der står på manden man aflevere pakken hos
     icon = "box", -- iconet ved siden af lablet
     distance = 2, -- hvor tæt man skal være på for at kunne se targetet på postmanden
-    onSelect = function(data)
-        if pakketaget == true then
-        TriggerEvent("opgavefærdig") -- ik ændre i det her
-        else
-        lib.notify({title = 'fejl', description = 'Du mangler at hente pakken i din bil', type = 'error'})
-        end
-    end
 }
 
 Config.pakkeoptions = {

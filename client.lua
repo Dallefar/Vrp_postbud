@@ -42,14 +42,14 @@ Citizen.CreateThread(function()
     end
 end)
 
-RegisterCommand("postmenu", function()
-    HT.TriggerServerCallback('Postbud:hasgruop', function(result)
+RegisterCommand("postmenu", function(source)
+    HT.TriggerServerCallback('Post-bud:HasPermission', function(result)
         if result then
             postmenu()
-        else
+        else 
             notifyerror()
         end
-    end, Config.gruop)
+    end, Config.perm)
 end)
 
 function postmenu()
@@ -94,8 +94,8 @@ function postmenu()
 end
 
 RegisterNetEvent("openinfocenter")
-AddEventHandler("openinfocenter", function()
-    HT.TriggerServerCallback('Postbud:hasgruop', function(result)
+AddEventHandler("openinfocenter", function(source)
+    HT.TriggerServerCallback('Post-bud:HasPermission', function(result)
         if result then
             local info = lib.alertDialog({
                 header = "Postbud - Chef",
@@ -106,13 +106,14 @@ AddEventHandler("openinfocenter", function()
         else
             notifyerror()
         end
-    end, Config.gruop)
+    end, Config.perm)
 end)
 
 RegisterNetEvent("postbil")
 AddEventHandler("postbil", function()
-    local playercoords = GetEntityCoords(player)
-    local forskel = #(playercoords - Config.bilspawn)
+    local ped = PlayerPedId()
+    local playercoords = GetEntityCoords(ped)
+    local forskel = Vdist(playercoords.x, playercoords.y, playercoords.z, Config.bilspawn.x, Config.bilspawn.y, Config.bilspawn.z)
   
     if not bilcooldownactive then
         if forskel <= Config.bilspawndistance then
@@ -207,21 +208,9 @@ AddEventHandler("pakkeud", function()
     local xRotation, yRotation, zRotation = 0.0, 0.0, 90.0
 
     SetEntityRotation(prop, xRotation, yRotation, zRotation, 2, true)
+    print(pakketaget)
 end)
 
-RegisterNetEvent("respawncar")
-AddEventHandler("respawncar", function()
-    if DoesEntityExist(bil) then
-        DeleteVehicle(bil)
-
-        RequestModel(Config.bilnavn)
-        while not HasModelLoaded(Config.bilnavn) do
-            Citizen.Wait(500)
-        end
-
-        bil = CreateVehicle(GetHashKey(Config.bilnavn), Config.carspawn, true, false)
-    end
-end)
 
 RegisterNetEvent("startopgave")
 AddEventHandler("startopgave", function()
@@ -263,7 +252,17 @@ AddEventHandler("startopgave", function()
             playergotocoords = GetOffsetFromEntityInWorldCoords(modtager, 0.0, 1.0, 0.0)
             local ModtagerNetId = NetworkGetNetworkIdFromEntity(modtager)
 
-            exports.ox_target:addEntity(ModtagerNetId, Config.modtageroptions)
+            exports.ox_target:addEntity(ModtagerNetId, { 
+                label = Config.modtageroptions.label, -- lablet der står på manden man aflevere pakken hos
+                icon = Config.modtageroptions.icon, -- iconet ved siden af lablet
+                distance = Config.modtageroptions.distance, -- hvor tæt man skal være på for at kunne se targetet på postmanden
+                onSelect = function(data)
+                    if pakketaget then
+                        TriggerEvent("opgavefærdig") -- ik ændre i det her
+                    else
+                        lib.notify({title = 'Post-Bud', description = 'Du mangler at hente pakken i din bil', type = 'error'})
+                    end
+                end})
         else
             lib.notify({
                 title = 'Postbud',
@@ -274,7 +273,7 @@ AddEventHandler("startopgave", function()
     else
         lib.notify({
             title = 'Postbud',
-            description = 'du skal have en postbil for at starte en opgave',
+            description = 'Du skal have en postbil for at starte en opgave',
             type = 'error'
         })
     end
@@ -282,6 +281,7 @@ end)
 
 RegisterNetEvent("opgavefærdig")
 AddEventHandler("opgavefærdig", function()
+    print(pakketaget)
     local oppositeHeading = (randomH + 180) % 360
     TaskGoStraightToCoord(player, playergotocoords, 1, -1, oppositeHeading, 0.1)
     SetEntityHeading(player, oppositeHeading)
@@ -314,9 +314,9 @@ AddEventHandler("opgavefærdig", function()
     annulervar = true
     biltargetvar = false
 
-    TriggerEvent("respawncar")
-    TriggerServerEvent("betaling", source)
-    lib.notify({title = 'Færdig', description = 'Du færdig gjorde din opgave', type = 'succes'})
+    local amount = math.random(Config.betaling[1], Config.betaling[2])
+    TriggerServerEvent("betaling",amount)
+    lib.notify({title = 'Færdig', description = 'Du færdig gjorde din opgave og tjente ' .. amount .. 'kr', type = 'succes'})
 end)
 
 RegisterNetEvent("stopopgave")
@@ -336,7 +336,6 @@ AddEventHandler("stopopgave", function()
         DeleteWaypoint()
         DeleteEntity(prop)
         lib.notify({title = 'Stop', description = 'Du stoppede din opgave', type = 'info'})
-        TriggerEvent("respawncar")
     else
         lib.notify({title = 'Info', description = 'Du fortsatte med din opgave', type = 'info'})
     end
