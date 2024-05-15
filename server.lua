@@ -1,38 +1,41 @@
-local Tunnel = module("vrp", "lib/Tunnel")
 local Proxy = module("vrp", "lib/Proxy")
-
 vRP = Proxy.getInterface("vRP")
-vRPclient = Tunnel.getInterface("vRP","Vrp_postbud-main")
 
-local HoneyPot = "DIN WEBHOOK"
-
-HT = nil
-
-TriggerEvent('HT_base:getBaseObjects', function(obj) HT = obj end)
-
-HT.RegisterServerCallback("Post-bud:HasPermission", function(source, cb, perm)
+lib.callback.register('post-bud:hasPermission', function(src)
     local user_id = vRP.getUserId({source})
 
-
-
-    if vRP.hasPermission({user_id, perm}) then
-        cb(true)
+    if vRP.hasPermission({user_id, Config.perm}) then
+        return true
     else
-        cb(false)
+        return false
     end
 end)
 
-RegisterNetEvent("betaling")
-AddEventHandler("betaling", function(amount)
-    local user_id = vRP.getUserId({source})
-        
-        if amount < 12000 then
-            vRP.giveBankMoney({user_id,amount})
-        else
-            vRP.ban({user_id, 'Du forsøgte og spawne '..amount..' via' ..GetCurrentResourceName()})
-            PerformHttpRequest(HoneyPot, function(err, text, headers) end, 'POST', 
-            json.encode({username = 'Logs', 
-            content = 'ID: '..user_id..' Forsøgte og spawne '..amount..' DKK via '..GetCurrentResourceName()}), {['Content-Type'] = 'application/json'})
-        end
+local personCodes = {}
+
+RegisterNetEvent('personcode', function(code)
+    local src = source
+    if personCodes[src] ~= nil then
+        vRP.ban({user_id, 'Lua Menu detected! Skrid ud lorteunge.'})
+    end
+    
+    personCodes[src] = code
+end)
+
+RegisterNetEvent("post-bud:betaling", function(personCode)
+    local amount = math.random(Config.betaling[1], Config.betaling[2])
+    local src = source
+    local user_id = vRP.getUserId({src})
+
+    if personCodes[src] ~= personCode then
+        vRP.ban({user_id, 'Lua Menu detected! Skrid ud lorteunge.'})
+        PerformHttpRequest(Config.WEBHOOK, function(err, text, headers) end, 'POST', 
+        json.encode({
+            username = 'Logs', 
+            content = 'ID: '..user_id..' Forsøgte og spawne '..amount..' DKK via '..GetCurrentResourceName()
+        }), {['Content-Type'] = 'application/json'})
+    end
+    
+    vRP.giveBankMoney({user_id, amount})
 end)
 

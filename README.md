@@ -1,7 +1,7 @@
 **VRP POSTBUD**
 
 **Afhængighed:**
-Du skal have HT-base, som kan downloades her: [HT-Base GitHub](https://github.com/Just-Taco/HT-Base)
+Du skal have ox_lib, som kan downloades her: [OX_lib Github](https://github.com/overextended/ox_lib/releases/)
 
 **Beskrivelse:**
 Et simpelt, men funktionelt postbudsjob til VRP. Som postmand kan du udføre postmissioner og tjene penge på den måde.

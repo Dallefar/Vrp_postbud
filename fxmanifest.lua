@@ -10,16 +10,12 @@ dependency "vrp"
 
 shared_scripts {
   '@ox_lib/init.lua',
-  "Config.lua",
+  'config.lua',
 }
 
-client_scripts{ 
-  "lib/Proxy.lua",
-  "lib/Tunnel.lua",
-  "client.lua"
-}
+client_script 'client.lua'
 
-server_scripts{ 
-  "@vrp/lib/utils.lua",
-  "server.lua"
+server_scripts {
+  '@vrp/lib/utils.lua',
+  'server.lua'
 }
