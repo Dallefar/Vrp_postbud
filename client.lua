@@ -334,8 +334,9 @@ function finishTask()
     annulervar = true
     biltargetvar = false
 
-    TriggerServerEvent("post-bud:betaling", personCode)
-    lib.notify({title = 'Færdig', description = 'Du færdig gjorde din opgave og tjente ' .. amount .. 'kr', type = 'succes'})
+    lib.callback('post-bud:betaling', function(amount)
+        lib.notify({title = 'Færdig', description = 'Du færdig gjorde din opgave og tjente ' .. amount .. 'kr', type = 'succes'})
+    end, personCode)
 end
 
 function cooldown()
