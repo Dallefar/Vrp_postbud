@@ -6,7 +6,9 @@ Config.bilspawn = vector4(60.3270, 124.2754, 79.1249, 160.9626) -- lokationen bi
 
 Config.maxDistanceToRemoveCar = 10
 
-Config.perm = "postbud.duty"
+if IsDuplicityVersion() then
+    Config.perm = "postbud.duty"
+end
 
 Config.bilnavn = "boxville2" -- navnet på postbilen
 
@@ -21,6 +23,24 @@ Config.modtager = "s_m_m_lifeinvad_01" -- peden på npcen som modtager pakker
 Config.pedCoords = vector4(69.2403, 127.7394, 79.2142 - 1, 154.0445) -- lokationen på din postmand
 
 Config.cooldown = 600 -- længden på cooldown mellem missioner (talet er milisekunder så 1000 = 1 sekund)
+
+Config.pedoptions = {
+    label = "Åben post info centeret.", -- det der står på target ved postmanden / lablet
+    icon = "fas fa-user", -- iconet ved siden lablet
+    distance = 3, -- hvor tæt man skal være på for at kunne se targetet på postmanden
+}
+
+Config.modtageroptions = {
+    label = "Aflever pakke.", -- lablet der står på manden man aflevere pakken hos
+    icon = "box", -- iconet ved siden af lablet
+    distance = 2, -- hvor tæt man skal være på for at kunne se targetet på postmanden
+}
+
+Config.pakkeoptions = {
+    label = "Tag pakken ud",
+    icon = "box",
+    distance = 3
+}
 
 Config.coords = {
     {101.0699, -1115.1877, 29.3018, 172.2791},
@@ -44,30 +64,6 @@ Config.coords = {
     {231.7671, 365.1120, 106.0091, 157.7444},
 }
 
-Config.pedoptions = {
-    label = "Åben post info centeret.", -- det der står på target ved postmanden / lablet
-    icon = "fas fa-user", -- iconet ved siden lablet
-    distance = 3, -- hvor tæt man skal være på for at kunne se targetet på postmanden
-    onSelect = function(data)
-        TriggerEvent("openinfocenter") -- ik ændre i det her
-    end
-}
-
-
---local pakketaget = true
-
-Config.modtageroptions = {
-    label = "Aflever pakke.", -- lablet der står på manden man aflevere pakken hos
-    icon = "box", -- iconet ved siden af lablet
-    distance = 2, -- hvor tæt man skal være på for at kunne se targetet på postmanden
-}
-
-Config.pakkeoptions = {
-    label = "Tag pakken ud",
-    icon = "box",
-    distance = 3,
-    onSelect = function(data)
-        TriggerEvent("pakkeud")
-        exports.ox_target:removeEntity(BilNetId, Config.pakkeoptions)
-    end
-}
+if IsDuplicityVersion() then
+    Config.WEBHOOK = ''
+end
